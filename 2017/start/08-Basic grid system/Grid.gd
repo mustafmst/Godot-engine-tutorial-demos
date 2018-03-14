@@ -18,6 +18,10 @@ func _ready():
 		for y in range(grid_size.y):
 			grid[x].append(null)
 	
+	var player = get_node("Player")
+	var start_position = update_child_pos(player)
+	player.set_pos(start_position)
+	
 	# 2. Create obstacles
 	var positions = []
 	for n in range(5):
@@ -36,9 +40,8 @@ func _ready():
 func is_cell_vacant(pos, direction):
 	# Return true if the cell is vacant, else false
 	var new_pos = world_to_map(pos) + direction
-	
-	if new_pos.x > grid_size.x and new_pos.x <= 0:
-		if new_pos.y > grid_size.y and new_pos.y <= 0:
+	if new_pos.x < grid_size.x and new_pos.x >= 0:
+		if new_pos.y < grid_size.y and new_pos.y >= 0:
 			if grid[new_pos.x][new_pos.y] == null:
 				return true
 	
