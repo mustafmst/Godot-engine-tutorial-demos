@@ -1,40 +1,31 @@
 extends KinematicBody2D
 
-var direction = Vector2()
-
 const TOP = Vector2(0, -1)
 const RIGHT = Vector2(1, 0)
-const DOWN = Vector2(0, 1)
 const LEFT = Vector2(-1, 0)
+const DOWN = Vector2(0, 1)
 
-var speed = 0
-const MAX_SPEED = 400
+var direction = Vector2(0,0)
 
-var velocity = Vector2()
+var grid
+var type
+
 
 func _ready():
+	grid = get_parent()
+	type = grid.ENTITY_TYPES.PLAYER
 	set_fixed_process(true)
 
 
 func _fixed_process(delta):
-	var is_moving = Input.is_action_pressed("move_up") or Input.is_action_pressed("move_right") or Input.is_action_pressed("move_down") or Input.is_action_pressed("move_left")
+	direction = Vector2(0,0)
+	if Input.is_action_pressed("move_up"):
+		direction += TOP
+	if Input.is_action_pressed("move_down"):
+		direction += DOWN
+	if Input.is_action_pressed("move_left"):
+		direction += LEFT
+	if Input.is_action_pressed("move_right"):
+		direction += RIGHT
 	
-	direction = Vector2()
-	if is_moving:
-		speed = MAX_SPEED
-		
-		if Input.is_action_pressed("move_up"):
-			direction = TOP
-		elif Input.is_action_pressed("move_down"):
-			direction = DOWN
-		elif Input.is_action_pressed("move_left"):
-			direction = LEFT
-		elif Input.is_action_pressed("move_right"):
-			direction = RIGHT
-	else:
-		speed = 0
-	
-	velocity = speed * direction.normalized() * delta
-	
-	move(velocity)
-	
+	set_pos(grid.update_child_pos(self))
